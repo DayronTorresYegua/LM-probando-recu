@@ -8,11 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!res.ok) throw 'Pokémon no encontrado';
         return res.json();
     };
-
     const mostrarPokemon = (pokemon) => {
         tablaBody.innerHTML = `
             <tr>
-                <td><img src="${pokemon.sprites.front_default}" alt="${pokemon.name}"></td>
+                <td><img src="${pokemon.sprites.front_default}" class="pokemon-img" alt="${pokemon.name}"></td>
                 <td>${pokemon.name}</td>
                 <td>${pokemon.height}</td>
                 <td>${pokemon.weight}</td>
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </tr>
         `;
     };
-
     const buscar = async () => {
         const nombre = pokemonInput.value.trim().toLowerCase();
         if (!nombre) return alert('Introduce un Pokémon');
@@ -33,6 +31,5 @@ document.addEventListener('DOMContentLoaded', () => {
             tablaBody.innerHTML = '';
         }
     };
-
     buscarBtn.addEventListener('click', buscar);
 });

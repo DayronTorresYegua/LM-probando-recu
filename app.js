@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function conseguirFavoritos() {
-        const saved = localStorage.getItem('pokemonFavorites');
-        return saved ? JSON.parse(saved) : [];
+        const guardado = localStorage.getItem('pokemonFavorites');
+        return guardado ? JSON.parse(guardado) : [];
     }
 
     function guardarFavoritos(favoritos) {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         favorites.forEach(pokemon => {
             html += `
                 <tr>
-                    <td><img src="${pokemon.image}" class="pokemon-img"></td>
+                    <td><img src="${pokemon.image}" class="pokemon-img" alt="Imagen de ${pokemon.name}"></td>
                     <td>${pokemon.name}</td>
                     <td>${pokemon.height}</td>
                     <td>${pokemon.weight}</td>

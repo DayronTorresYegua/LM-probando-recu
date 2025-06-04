@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    const favoritesTable = document.getElementById('favoritos-body');
+    const tablaFavoritos = document.getElementById('favoritos-body');
 
     cargarFavoritos();
 
@@ -16,13 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function addFavoritos(imgElement) {
-        const row = imgElement.parentElement.parentElement; // Obtenemos la fila
+        const fila = imgElement.parentElement.parentElement;
         const pokemon = {
-            name: row.cells[1].textContent,
+            name: fila.cells[1].textContent,
             image: imgElement.src,
-            height: row.cells[2].textContent,
-            weight: row.cells[3].textContent,
-            types: row.cells[4].textContent
+            height: fila.cells[2].textContent,
+            weight: fila.cells[3].textContent,
+            types: fila.cells[4].textContent
         };
 
         const favorites = conseguirFavoritos();
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         });
 
-        favoritesTable.innerHTML = html;
+        tablaFavoritos.innerHTML = html;
     }
 
     function cargarFavoritos() {

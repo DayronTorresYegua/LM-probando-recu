@@ -1,22 +1,29 @@
 document.addEventListener('DOMContentLoaded', function() {
-
     const tablaFavoritos = document.getElementById('favoritos-body');
+    const tablaPrincipal = document.querySelector('#pokemon-table tbody');
 
     cargarFavoritos();
 
     document.addEventListener('click', function(event) {
+        const pokemonImg = event.target.closest('.pokemon-img');
 
-        if (event.target.classList.contains('pokemon-img')) {
-            addFavoritos(event.target);
+        if (pokemonImg && tablaPrincipal.contains(pokemonImg.closest('tr'))) {
+            const pokemonName = pokemonImg.closest('tr').cells[1].textContent;
+
+            if (!esFavorito(pokemonName)) {
+                console.log('click');
+                addFavoritos(pokemonImg);
+            }
         }
 
-        if (event.target.classList.contains('delete-btn')) {
-            eliminarFavorito(event.target.dataset.pokemonName);
+        const deleteBtn = event.target.closest('.delete-btn');
+        if (deleteBtn && tablaFavoritos.contains(deleteBtn.closest('tr'))) {
+            eliminarFavorito(deleteBtn.dataset.pokemonName);
         }
     });
 
     function addFavoritos(imgElement) {
-        const fila = imgElement.parentElement.parentElement;
+        const fila = imgElement.closest('tr');
         const pokemon = {
             name: fila.cells[1].textContent,
             image: imgElement.src,
@@ -31,7 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
             favorites.push(pokemon);
             guardarFavoritos(favorites);
             mostrarFavorito();
+            return true;
         }
+        return false;
     }
 
     function eliminarFavorito(pokemonName) {

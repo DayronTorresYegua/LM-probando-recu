@@ -1,0 +1,16 @@
+#personajesTable {
+    width: 30%;
+}
+
+#personajesTable th, #personajesTable td {
+    width: 25%;
+    text-align: center;
+    padding: 0.625rem;
+}
+
+.personajeImg {
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    border-radius: 50%;
+}

@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const buscar = async () => {
         const id = rickInput.value.trim();
         if (!id) return alert('Introduce un id');
-
         try {
             const personaje = await obtenerPersonaje(id);
             mostrarPersonaje(personaje);
@@ -33,6 +32,5 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(error);
         }
     };
-
     botonBuscar.addEventListener('click', buscar);
 });

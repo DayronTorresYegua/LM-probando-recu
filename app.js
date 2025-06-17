@@ -1,85 +1,56 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const tablaFavoritos = document.getElementById('favoritos-body');
-    const tablaPrincipal = document.querySelector('#pokemon-table tbody');
-    cargarFavoritos();
-    document.addEventListener('click', function(event) {
-        const pokemonImg = event.target.closest('.pokemon-img');
+document.addEventListener('DOMContentLoaded', () => {
+    const tablaFavoritos = document.getElementById('cuerpoFavoritos');
+    const tablaPrincipal = document.querySelector('#tablaPokemon tbody');
+
+    const conseguirFavoritos = () => JSON.parse(localStorage.getItem('personajesFavoritos')) || [];
+    const guardarFavoritos = favoritos => localStorage.setItem('personajesFavoritos', JSON.stringify(favoritos));
+    const esFavorito = nombre => conseguirFavoritos().some(p => p.name === nombre);
+
+    const mostrarFavoritos = () => {
+        const favoritos = conseguirFavoritos();
+        tablaFavoritos.innerHTML = favoritos.map(pokemon => `
+            <tr>
+                <td><img src="${pokemon.image}" class="pokemonImg" alt="${pokemon.name}"></td>
+                <td>${pokemon.name}</td>
+                <td>${pokemon.types}</td>
+                <td>${pokemon.height}</td>
+                <td>${pokemon.weight}</td>
+                <td><button class="botonBorrar" data-nombre-pokemon="${pokemon.name}">Eliminar</button></td>
+            </tr>
+        `).join('');
+    };
+
+    document.addEventListener('click', e => {
+        const pokemonImg = e.target.closest('.pokemonImg');
+        const botonBorrar = e.target.closest('.botonBorrar');
+
         if (pokemonImg && tablaPrincipal.contains(pokemonImg.closest('tr'))) {
-            const pokemonName = pokemonImg.closest('tr').cells[1].textContent;
-            if (!esFavorito(pokemonName)) {
-                console.log('click');
-                addFavoritos(pokemonImg);
+            const fila = pokemonImg.closest('tr');
+            const nombrePokemon = fila.cells[1].textContent.trim();
+
+            if (!esFavorito(nombrePokemon)) {
+                const favoritos = conseguirFavoritos();
+                favoritos.push({
+                    name: nombrePokemon,
+                    image: pokemonImg.src,
+                    types: fila.cells[2].textContent.trim(),
+                    height: fila.cells[3].textContent.trim(),
+                    weight: fila.cells[4].textContent.trim(),
+                });
+                guardarFavoritos(favoritos);
+                mostrarFavoritos();
+                console.log(`${nombrePokemon} añadido a favoritos`);
             }
         }
 
-        const deleteBtn = event.target.closest('.delete-btn');
-        if (deleteBtn && tablaFavoritos.contains(deleteBtn.closest('tr'))) {
-            eliminarFavorito(deleteBtn.dataset.pokemonName);
+        if (botonBorrar && tablaFavoritos.contains(botonBorrar.closest('tr'))) {
+            const nombrePokemon = botonBorrar.getAttribute('data-nombre-pokemon');
+            const favoritosActualizados = conseguirFavoritos().filter(p => p.name !== nombrePokemon);
+            guardarFavoritos(favoritosActualizados);
+            mostrarFavoritos();
+            console.log(`${nombrePokemon} eliminado de favoritos`);
         }
     });
 
-    function addFavoritos(imgElement) {
-        const fila = imgElement.closest('tr');
-        const pokemon = {
-            name: fila.cells[1].textContent,
-            image: imgElement.src,
-            height: fila.cells[2].textContent,
-            weight: fila.cells[3].textContent,
-            types: fila.cells[4].textContent
-        };
-        const favorites = conseguirFavoritos();
-        if (!esFavorito(pokemon.name)) {
-            favorites.push(pokemon);
-            guardarFavoritos(favorites);
-            mostrarFavorito();
-            return true;
-        }
-        return false;
-    }
-
-    function eliminarFavorito(pokemonName) {
-        const updatedFavorites = conseguirFavoritos().filter(p => p.name !== pokemonName);
-        guardarFavoritos(updatedFavorites);
-        mostrarFavorito();
-    }
-
-    function conseguirFavoritos() {
-        const guardado = localStorage.getItem('pokemonFavorites');
-        return guardado ? JSON.parse(guardado) : [];
-    }
-
-    function guardarFavoritos(favoritos) {
-        localStorage.setItem('pokemonFavorites', JSON.stringify(favoritos));
-    }
-
-    function esFavorito(name) {
-        return conseguirFavoritos().some(p => p.name === name);
-    }
-
-    function mostrarFavorito() {
-        const favorites = conseguirFavoritos();
-        let html = '';
-
-        favorites.forEach(pokemon => {
-            html += `
-                <tr>
-                    <td><img src="${pokemon.image}" class="pokemon-img" alt="Imagen de ${pokemon.name}"></td>
-                    <td>${pokemon.name}</td>
-                    <td>${pokemon.height}</td>
-                    <td>${pokemon.weight}</td>
-                    <td>${pokemon.types}</td>
-                    <td>
-                        <button class="delete-btn" data-pokemon-name="${pokemon.name}">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-        tablaFavoritos.innerHTML = html;
-    }
-
-    function cargarFavoritos() {
-        mostrarFavorito();
-    }
+    mostrarFavoritos();
 });

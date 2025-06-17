@@ -31,6 +31,5 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(error);
         }
     };
-
     botonBuscar.addEventListener('click', buscar);
 });

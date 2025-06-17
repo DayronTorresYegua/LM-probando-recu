@@ -1,50 +1,43 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <script src="pokemon.js"></script>
     <script src="app.js"></script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de Pokémon</title>
+    <title>Buscador de pokemon</title>
 </head>
 <body>
-<h1>Buscador de Pokémon</h1>
-
+<h1>Buscador de pokemon</h1>
 <div>
-    <input type="text" id="pokemon-input" placeholder="Introduzca un Pokémon">
-    <button id="buscar-btn">Buscar</button>
+    <input type="text" id="introducirPokemon" placeholder="Introduce un pokemon">
+    <button id="botonBuscar">Buscar</button>
 </div>
-
 <div id="resultado">
-    <table id="pokemon-table">
+    <table id="tablaPokemon">
         <thead>
         <tr>
             <th>Imagen</th>
             <th>Nombre</th>
-            <th>Altura</th>
-            <th>Peso</th>
             <th>Tipos</th>
+            <th>Peso</th>
+            <th>Altura</th>
         </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
 </div>
-
-<h2>Pokémon Favoritos</h2>
-<table id="favoritos-table">
+<h2>Lista Favoritos</h2>
+<table id="tablaFavoritos">
     <thead>
     <tr>
         <th>Imagen</th>
         <th>Nombre</th>
-        <th>Altura</th>
-        <th>Peso</th>
         <th>Tipos</th>
-        <th>Acciones</th>
+        <th>Peso</th>
+        <th>Altura</th>
     </tr>
     </thead>
-    <tbody id="favoritos-body">
-    </tbody>
+    <tbody id="cuerpoFavoritos"></tbody>
 </table>
 </body>
 </html>

@@ -1,15 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     const tablaFavoritos = document.getElementById('favoritos-body');
     const tablaPrincipal = document.querySelector('#pokemon-table tbody');
-
     cargarFavoritos();
-
     document.addEventListener('click', function(event) {
         const pokemonImg = event.target.closest('.pokemon-img');
-
         if (pokemonImg && tablaPrincipal.contains(pokemonImg.closest('tr'))) {
             const pokemonName = pokemonImg.closest('tr').cells[1].textContent;
-
             if (!esFavorito(pokemonName)) {
                 console.log('click');
                 addFavoritos(pokemonImg);
@@ -31,9 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             weight: fila.cells[3].textContent,
             types: fila.cells[4].textContent
         };
-
         const favorites = conseguirFavoritos();
-
         if (!esFavorito(pokemon.name)) {
             favorites.push(pokemon);
             guardarFavoritos(favorites);
@@ -82,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </tr>
             `;
         });
-
         tablaFavoritos.innerHTML = html;
     }
 

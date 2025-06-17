@@ -1,87 +1,59 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const tablaFavoritos = document.getElementById('favoritosBody');
     const tablaPrincipal = document.querySelector('#personajesTable tbody');
 
-    cargarFavoritos()
+    // Funciones de localStorage simplificadas
+    const conseguirFavoritos = () => JSON.parse(localStorage.getItem('personajesFavoritos') || '[]');
+    const guardarFavoritos = favoritos => localStorage.setItem('personajesFavoritos', JSON.stringify(favoritos));
+    const esFavorito = nombre => conseguirFavoritos().some(p => p.name === nombre);
 
-    document.addEventListener('click', function(event) {
-        const personajeImg = event.target.closest('.personajeImg');
+    // Función para mostrar favoritos
+    const mostrarFavoritos = () => {
+        tablaFavoritos.innerHTML = conseguirFavoritos().map(personaje => `
+            <tr>
+                <td><img src="${personaje.image}" class="personajeImg" alt="Imagen de ${personaje.name}"></td>
+                <td>${personaje.name}</td>
+                <td>${personaje.species}</td>
+                <td>${personaje.status}</td>
+                <td><button class="botonBorrar" data-nombrepersonaje="${personaje.name}">eliminar</button></td>
+            </tr>
+        `).join('');
+    };
 
+    // Event listener unificado
+    document.addEventListener('click', e => {
+        const personajeImg = e.target.closest('.personajeImg');
+        const botonBorrar = e.target.closest('.botonBorrar');
+
+        // Añadir favorito
         if (personajeImg && tablaPrincipal.contains(personajeImg.closest('tr'))) {
-            const nombrePersonaje = personajeImg.closest('tr').cells[1].textContent;
+            const fila = personajeImg.closest('tr');
+            const nombrePersonaje = fila.cells[1].textContent;
 
-            if (!esFavorito) {
+            if (!esFavorito(nombrePersonaje)) {
+                const favoritos = conseguirFavoritos();
+                favoritos.push({
+                    name: nombrePersonaje,
+                    image: personajeImg.src,
+                    species: fila.cells[2].textContent,
+                    status: fila.cells[3].textContent
+                });
+                guardarFavoritos(favoritos);
+                mostrarFavoritos();
                 console.log(`${nombrePersonaje} añadido a favoritos`);
-                addFavoritos(PersonajeImg);
             }
         }
 
-        const botonBorrar = event.target.closest('.botonBorrar');
-        if (botonBorrar && tablaPrincipal.contains(botonBorrar.closest('tr'))) {
-            eliminarFavorito(botonBorrar.dataset.nombrePersonaje);
+        // Eliminar favorito
+        if (botonBorrar && tablaFavoritos.contains(botonBorrar.closest('tr'))) {
+            const actualizarFavoritos = conseguirFavoritos().filter(p => p.name !== botonBorrar.dataset.nombrepersonaje);
+            guardarFavoritos(actualizarFavoritos);
+            mostrarFavoritos();
         }
     });
 
-    function addFavoritos(elementoImg) {
-        const fila = elementoImg.closest('tr');
-        const personaje = {
-            name: fila.cells[1].textContent,
-            image: elementoImg.src,
-            species: fila.cells[2].textContent,
-            status: fila.cells[3].textContent,
-        };
-
-        const favoritos = conseguirFavoritos();
-
-        if (!esFavorito(personaje.name)) {
-            favoritos.push(personaje);
-            guardarFavoritos(favoritos);
-            mostrarFavoritos();
-            return true;
-        }
-        return false;
-    }
-
-    function eliminarFavorito(nombrePersonaje) {
-        const actualizarFavoritos = conseguirFavoritos().filter(p => p.name !== nombrePersonaje);
-        guardarFavoritos(actualizarFavoritos);
-        mostrarFavoritos();
-    }
-
-    function conseguirFavoritos() {
-        const guardado = localStorage.getItem('personajesFavoritos');
-        return guardado ? JSON.parse(guardado) : [];
-    }
-
-    function guardarFavoritos(favoritos) {
-        localStorage.setItem('personajesFavoritos', JSON.stringify(favoritos));
-    }
-
-    function esFavorito(nombrePersonaje) {
-        return conseguirFavoritos().some(p => p.name === nombrePersonaje);
-    }
-
-    function mostrarFavoritos() {
-        const favoritos = conseguirFavoritos()
-        let html = '';
-
-        favorites.forEach(personaje => {
-            html += `
-                <tr>
-                    <td><img src="${personaje.image}" class="personajeImg" alt="Imagen de ${personaje.name}"></td>
-                    <td>${personaje.name}</td>
-                    <td>${personaje.species}</td>
-                    <td>${personaje.status}</td>
-                    <td>
-                        <button class="botonBorrar" data-nombrePersonaje="${personaje.name}">
-                        eliminar
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-        tablaPrincipal.innerHTML = html;
-    }
+    // Cargar favoritos al inicio
+    cargarFavoritos();
 
     function cargarFavoritos() {
         mostrarFavoritos();
